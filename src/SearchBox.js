@@ -1,6 +1,6 @@
 import React from "react";
 
-const SeatchBox = () => {
+const SeatchBox = ({ searchChange }) => {
   return (
     <div className="mt-4">
       <input
@@ -9,6 +9,7 @@ const SeatchBox = () => {
         name=""
         id=""
         placeholder="Search Characters"
+        onChange={searchChange}
       />
     </div>
   );

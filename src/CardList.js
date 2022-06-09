@@ -1,13 +1,12 @@
 import React from "react";
-import { characters } from "./characters";
 import Card from "./Card";
 
-const CardList = () => {
+const CardList = ({ characters }) => {
   return (
     <div className="flex flex-wrap justify-center gap-4 items-stretch mt-12">
-      {characters.map((character) => (
+      {characters.map((character, i) => (
         <Card
-          key={character.id}
+          key={i}
           name={character.character}
           house={character.hogwartsHouse}
           imgUrl={character.image}
