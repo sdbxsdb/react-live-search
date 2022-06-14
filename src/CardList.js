@@ -7,10 +7,13 @@ const CardList = ({ characters }) => {
       {characters.map((character, i) => (
         <Card
           key={i}
-          name={character.character}
-          house={character.hogwartsHouse}
+          name={character.name}
+          house={character.house}
+          ancestry={character.ancestry}
+          dob={character.dateOfBirth}
           imgUrl={character.image}
-          children={character.child}
+          wand={character.wand}
+          patronus={character.patronus}
         />
       ))}
     </div>

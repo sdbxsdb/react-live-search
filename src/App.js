@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import CardList from "./CardList";
-import { characters } from "./characters";
 import SearchBox from "./SearchBox";
+import Scroll from "./Scroll";
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      characters: characters,
+      characters: [],
       searchfield: "",
     };
   }
@@ -16,30 +16,67 @@ class App extends Component {
     this.setState({ searchfield: event.target.value });
   };
 
-  render() {
-    const filteredCharacters = this.state.characters.filter((character) => {
-      return (
-        character.character
-          .toLowerCase()
-          .includes(this.state.searchfield.toLowerCase()) ||
-        character.hogwartsHouse
-          .toLowerCase()
-          .includes(this.state.searchfield.toLowerCase()) ||
-        character.nickname
-          .toLowerCase()
-          .includes(this.state.searchfield.toLowerCase())
-      );
-    });
+  async componentDidMount() {
+    try {
+      const res = await fetch("https://hp-api.herokuapp.com/api/characters");
+      const charactersAll = await res.json();
+      this.setState({ characters: charactersAll });
+    } catch (error) {
+      console.log({ error });
+    }
+  }
 
-    return (
-      <div className="container flex flex-col items-center justify-center mx-auto">
-        <h1 className="font-bold text-2xl mt-4">
-          Harry Potter Character Search
-        </h1>
-        <SearchBox searchChange={this.onSearchChange} />
-        <CardList characters={filteredCharacters} />
-      </div>
-    );
+
+
+  render() {
+    if (this.state.characters?.length > 0) {
+      const filteredCharacters = this.state.characters?.filter((character) => {
+        return (
+          character.name
+            .toLowerCase()
+            .startsWith(this.state.searchfield?.toLowerCase()) ||
+          character.house
+            .toLowerCase()
+            .startsWith(this.state.searchfield?.toLowerCase()) ||
+          character.wand.wood
+            .toLowerCase()
+            .startsWith(this.state.searchfield?.toLowerCase())
+            ||
+          character.wand.core
+            .toLowerCase()
+            .startsWith(this.state.searchfield?.toLowerCase())
+            ||
+          character.ancestry
+            .toLowerCase()
+            .startsWith(this.state.searchfield?.toLowerCase())
+            ||
+            character.dateOfBirth
+              .toLowerCase()
+              .includes(this.state.searchfield?.toLowerCase())
+        );
+      });
+
+      return (
+        <div className="container flex flex-col items-center justify-center mx-auto">
+          <h1 className="font-bold text-white text-2xl mt-4">
+            Harry Potter Characters
+          </h1>
+          <SearchBox searchChange={this.onSearchChange} />
+          <Scroll>
+            <CardList characters={filteredCharacters} />
+          </Scroll>
+        </div>
+      );
+    } else {
+      return (
+        <>
+        <h1 className="font-bold text-center text-white text-2xl mt-4">
+            Harry Potter Characters
+          </h1>
+        <p className='text-white text-xl text-center mt-12'>Error loading characters... Please try again.</p>
+        </>
+      )
+    }
   }
 }
 
