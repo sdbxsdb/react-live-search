@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState, useEffect } from "react";
 import CardList from "./CardList";
 import SearchBox from "./SearchBox";
 import Scroll from "./Scroll";
@@ -73,7 +73,7 @@ class App extends Component {
         <h1 className="font-bold text-center text-white text-2xl mt-4">
             Harry Potter Characters
           </h1>
-        <p className='text-white text-xl text-center mt-12'>Error loading characters... Please try again.</p>
+        <p className='text-white text-xl text-center mt-12'>Loading characters...</p>
         </>
       )
     }
