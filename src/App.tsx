@@ -1,23 +1,40 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import CardList from "./CardList";
 import SearchBox from "./SearchBox";
 import Scroll from "./Scroll";
+import {getData} from './utils/data.utils';
 
-function App() {
-  const [characters, setCharacters] = useState([]);
+
+export type Person = {
+  id: string;
+  name: string;
+  house: string;
+  wand: {
+    wood: string;
+    core: string;
+    length: string;
+  }
+  ancestry: string;
+  dob: string;
+  patronus: string;
+  imgUrl: string;
+}
+
+const App = () => {
   const [searchfield, setSearchfield] = useState("");
-
+  const [characters, setCharacters] = useState<Person[]>([]);
 
   useEffect(() => {
-    fetch("https://hp-api.herokuapp.com/api/characters")
-      .then((response) => response.json())
-      .then((charactersAll) => {
-        setCharacters(charactersAll);
-      });
+
+    const fetchCharacters = async () => {
+      const characters = await getData<Person[]>('https://hp-api.herokuapp.com/api/characters');
+      setCharacters(characters);
+    }
+    fetchCharacters();
   }, []);
 
 
-  const onSearchChange = (event) => {
+  const onSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchfield(event.target.value);
   };
 
@@ -35,8 +52,8 @@ function App() {
           .startsWith(searchfield?.toLowerCase()) ||
         character.ancestry
           .toLowerCase()
-          .startsWith(searchfield?.toLowerCase()) ||
-        character.dateOfBirth.toLowerCase().includes(searchfield?.toLowerCase())
+          .startsWith(searchfield?.toLowerCase()) 
+        // character.dob.toLowerCase().includes(searchfield?.toLowerCase())
       );
     });
 
@@ -46,7 +63,7 @@ function App() {
           Harry Potter Characters
         </h1>
         
-        <SearchBox searchChange={onSearchChange} />
+        <SearchBox placeholder="Search Characters" onChangeHandler={onSearchChange} />
         <Scroll>
           <CardList characters={filteredCharacters} />
         </Scroll>
